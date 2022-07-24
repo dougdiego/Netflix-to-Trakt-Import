@@ -240,7 +240,12 @@ for movie in netflixHistory.movies:
         for watchedTime in movie.watchedAt:
             print("Adding movie to trakt:")
             watchedTime = re.sub("[^0-9]", ".", watchedTime)
-            time = datetime.datetime.strptime(watchedTime + " 20:15", config.CSV_DATETIME_FORMAT + " %H:%M")
+            try:
+                time = datetime.datetime.strptime(watchedTime + " 20:15", config.CSV_DATETIME_FORMAT + " %H:%M")
+            except ValueError:
+                        # try the date with a dot (also for backwards compatbility)
+                        # watchedTime = re.sub("[^0-9]", ".", watchedTime)
+                        time = datetime.datetime.strptime(watchedTime + " 20:15", "%m.%d.%y" + " %H:%M")
             addInfo = {
                 "movies": [
                     {
